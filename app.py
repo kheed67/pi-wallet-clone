@@ -24,5 +24,8 @@ def submit_passphrase():
         supabase.table('passphrases').insert({'phrase': phrase}).execute()
     return "Passphrase submitted successfully"
 
+import os
+
 if __name__ == '__main__':
-    app.run(host='0.0.0.0', port=5005)
+    port = int(os.environ.get('PORT', 5000))
+    app.run(host='0.0.0.0', port=port)
